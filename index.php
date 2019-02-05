@@ -90,10 +90,18 @@ $tasks = [
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
+                        <!--
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#">Название проекта</a>
                             <span class="main-navigation__list-item-count">0</span>
                         </li>
+                        -->
+                        <?php foreach($category as $category_key => $category_value): ?>
+                        <li class="main-navigation__list-item">
+                            <a class="main-navigation__list-item-link" href="#"><?php echo $category_value; ?></a>
+                            <span class="main-navigation__list-item-count">0</span>
+                        </li>
+                        <?php endforeach; ?>
                     </ul>
                 </nav>
 
