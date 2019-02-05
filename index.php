@@ -2,6 +2,50 @@
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 ?>
+
+<?php
+// создаём массив данных
+$category = ['Входящие','Учеба','Работа','Домашние дела','Авто'];
+$tasks = [
+    [
+        'task' => 'Собеседование в IT компании',
+        'date_execution' => '01.12.2019',
+        'category' => $category[2],
+        'execution' => false,
+    ],
+    [
+        'task' => 'Выполнить тестовое задание',
+        'date_execution' => '25.12.2019',
+        'category' => $category[2],
+        'execution' => false,
+    ],
+    [
+        'task' => 'Сделать задание первого раздела',
+        'date_execution' => '21.12.2019',
+        'category' => $category[1],
+        'execution' => true,
+    ],
+    [
+        'task' => 'Встреча с другом',
+        'date_execution' => '22.12.2019',
+        'category' => $category[0],
+        'execution' => false,
+    ],
+    [
+        'task' => 'Купить корм для кота',
+        'date_execution' => null,
+        'category' => $category[3],
+        'execution' => false,
+    ],
+    [
+        'task' => 'Заказать пиццу',
+        'date_execution' => null,
+        'category' => $category[3],
+        'execution' => false,
+    ]
+];
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 
