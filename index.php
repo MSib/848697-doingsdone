@@ -46,6 +46,19 @@ $tasks = [
 ];
 ?>
 
+<?php
+    // Функция возвращает число задач для переданного проекта
+    function count_matches_in_array ($arr, $val) {
+        $result = 0;
+        foreach ($arr as $key => $value) {
+            if ($value['category'] === $val) {
+                $result++;
+            }
+        }
+        return $result;
+    };
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -93,7 +106,7 @@ $tasks = [
                         <?php foreach($category as $category_key => $category_value): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?php echo $category_value; ?></a>
-                            <span class="main-navigation__list-item-count">0</span>
+                            <span class="main-navigation__list-item-count"><?php echo count_matches_in_array($tasks, $category_value); ?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
