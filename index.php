@@ -106,7 +106,7 @@ $tasks = [
                         <?php foreach($category as $category_key => $category_value): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?php echo $category_value; ?></a>
-                            <span class="main-navigation__list-item-count"><?php echo count_matches_in_array($tasks, $category[$category_key]); ?></span>
+                            <span class="main-navigation__list-item-count"><?php echo count_matches_in_array($tasks, $category_value); ?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
