@@ -14,6 +14,8 @@
         'content' => $content,
         'category' => $category,
         'tasks' => $tasks,
+        'title_page' => $title_page,
+        'username' => $username
         ]);
 
     print($layout_content);
