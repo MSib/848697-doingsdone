@@ -13,9 +13,7 @@
     $layout_content = include_template('layout.php',[
         'content' => $content,
         'category' => $category,
-        'tasks' => $tasks,
-        'title_page' => $title_page,
-        'username' => $username
+        'tasks' => $tasks
         ]);
 
     print($layout_content);
