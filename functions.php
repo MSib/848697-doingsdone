@@ -1,23 +1,21 @@
 <?php
-function include_template($name, $data) {
-    $name = 'templates/' . $name;
-    $result = '';
+    function include_template($name, $data) {
+        $name = 'templates/' . $name;
+        $result = '';
 
-    if (!is_readable($name)) {
+        if (!is_readable($name)) {
+            return $result;
+        }
+
+        ob_start();
+        extract($data);
+        require $name;
+
+        $result = ob_get_clean();
+
         return $result;
     }
 
-    ob_start();
-    extract($data);
-    require $name;
-
-    $result = ob_get_clean();
-
-    return $result;
-}
-?>
-
-<?php
     // Функция возвращает число задач для переданного проекта
     function count_matches_in_array ($arr, $val) {
         $result = 0;
