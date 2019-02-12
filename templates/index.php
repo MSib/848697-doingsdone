@@ -21,9 +21,12 @@
 </div>
 
 <table class="tasks">
-    <?php foreach($tasks as $tasks_key => $tasks_value): ?>
+    <?php
+        if (date_default_timezone_get() !== $my_timezone) {                                         date_default_timezone_set($my_timezone);
+        }
+        foreach($tasks as $tasks_key => $tasks_value): ?>
         <?php if ((($show_complete_tasks === 1) and ($show_complete_tasks === $tasks_value['completed'])) or ($tasks_value['completed'] === 0)): ?>
-            <tr class="tasks__item task <?php if ($tasks_value['completed'] === 1): ?>task--completed<?php endif; ?>">
+    <tr class="tasks__item task<?php if ($tasks_value['completed'] === 1): ?> task--completed<?php elseif (((strtotime($tasks_value['day_of_complete']) < strtotime('now') + $deadline) and (strtotime($tasks_value['day_of_complete']) > strtotime('now') - $deadline)) and ($tasks_value['day_of_complete'] !== NULL)): ?> task--important<?php endif; ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
@@ -35,7 +38,8 @@
                     <a class="download-link" href="#">Home.psd</a>
                 </td>
 
-                <td class="task__date"><?php echo strip_tags($tasks_value['day_of_complete']); ?></td>
+                <td class="task__date"><?php if ($tasks_value['day_of_complete'] !== NULL) { echo $tasks_value['day_of_complete']; } else { echo 'Нет'; } ?>
+                </td>
             </tr>
         <?php endif; ?>
     <?php endforeach; ?>

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Дела в порядке</title>
+    <title><?php echo $title_page; ?></title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/flatpickr.min.css">
@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p>Константин</p>
+                        <p><?php echo $username; ?></p>
 
                         <a href="#">Выйти</a>
                     </div>
