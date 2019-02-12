@@ -11,6 +11,7 @@
             'day_of_complete' => '01.12.2019',
             'category' => $category[2],
             'completed' => 0
+
         ],
         [
             'task' => 'Выполнить тестовое задание',
