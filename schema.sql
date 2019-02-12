@@ -30,6 +30,8 @@ CREATE TABLE users (
     password VARCHAR(40) NOT NULL
 );
 
-CREATE INDEX title_index ON tasks(title);
+CREATE INDEX user_id_index ON projects(user_id);
+CREATE INDEX user_id_index ON tasks(user_id);
+CREATE INDEX project_id_index ON tasks(project_id);
 CREATE INDEX date_execution_index ON tasks(date_execution);
 CREATE INDEX email_index ON users(email);
