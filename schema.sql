@@ -1,0 +1,25 @@
+CREATE TABLE projects (
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    user_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    user_id INT NOT NULL,
+    project_id INT NOT NULL,
+    date_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_completed TIMESTAMP,
+    status INT DEFAULT 0,
+    title VARCHAR(100) NOT NULL,
+    file VARCHAR(255),
+    date_execution TIMESTAMP
+);
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    date_registration TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    email VARCHAR(100) NOT NULL,
+    username VARCHAR(30) NOT NULL,
+    password VARCHAR(40) NOT NULL
+);
