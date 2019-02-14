@@ -26,4 +26,12 @@
         }
         return $result;
     };
+
+    // Проверка и установка временной зоны
+    function set_timezone ($timezone) {
+        if (date_default_timezone_get() !== $timezone) {
+            date_default_timezone_set($timezone);
+        }
+        return date_default_timezone_get();
+    };
 ?>
