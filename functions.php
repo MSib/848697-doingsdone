@@ -34,4 +34,15 @@
         }
         return date_default_timezone_get();
     };
+
+    function get_task_class_completed_and_important ($tasks_value, $deadline) {
+        $result;
+            if ($tasks_value['completed'] === 1) {
+                $result = $result.' task--completed';
+            }
+            elseif (((strtotime($tasks_value['day_of_complete']) < strtotime('now') + $deadline) and (strtotime($tasks_value['day_of_complete']) > strtotime('now') - $deadline)) and ($tasks_value['day_of_complete'] !== NULL)) {
+                $result = $result.' task--important';
+            }
+        return $result;
+    };
 ?>
