@@ -1,4 +1,7 @@
 <?php
+    //Данные для подключения к БД
+    $connect = mysqli_connect('localhost','root','','doingsdone');
+
     // показывать или нет выполненные задачи
     $show_complete_tasks = rand(0, 1);
 

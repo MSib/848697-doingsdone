@@ -10,7 +10,8 @@
         'show_complete_tasks' => $show_complete_tasks,
         'deadline' => $deadline,
         'format_date' => $format_date,
-        'my_timezone' => $my_timezone
+        'my_timezone' => $my_timezone,
+        'connect' => $connect
         ]);
 
     $layout_content = include_template('layout.php',[
