@@ -38,23 +38,31 @@
     function get_task_class_completed_and_important ($tasks_value, $deadline) {
         $result;
             if ($tasks_value['completed'] === 1) {
-                $result = $result.' task--completed';
+                $result = $result . ' task--completed';
             }
             elseif (((strtotime($tasks_value['day_of_complete']) < strtotime('now') + $deadline) and (strtotime($tasks_value['day_of_complete']) > strtotime('now') - $deadline)) and ($tasks_value['day_of_complete'] !== NULL)) {
-                $result = $result.' task--important';
+                $result = $result . ' task--important';
             }
         return $result;
     };
 
-    function get_username_from_db($connect, $email) {
-        if ($connect == false) {
-            $result = 'Error DB';
+    function db_fetch_data($connect, $sql) {
+        $result = [];
+        if ($connect) {
+            mysqli_set_charset($connect, "utf8");
+            $query = mysqli_query($connect, $sql);
+            $result = mysqli_fetch_all($query, MYSQLI_ASSOC);
         } else {
-            $sql = "SELECT username FROM users WHERE email = '$email';";
-            $req = mysqli_query($connect, $sql);
-            $result = $req[0];
+            $result = 'Ошибка БД: ' . mysqli_error($query);
         };
         return $result;
-    }
+
+    };
+
+    function get_username_from_db($connect, $email) {
+        $sql = "SELECT username FROM users WHERE email =  '" . htmlspecialchars($email) . "';";
+        $result = db_fetch_data($connect, $sql)[0]['username'];
+        return $result;
+    };
 
 ?>
