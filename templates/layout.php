@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?php echo $username; ?></p>
+                        <p><?=get_username_from_db($connect, $current_user_email)?></p>
 
                         <a href="#">Выйти</a>
                     </div>
@@ -42,6 +42,7 @@
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
+
                         <?php foreach($category as $category_key => $category_value): ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?php echo strip_tags($category_value); ?></a>

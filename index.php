@@ -16,10 +16,12 @@
 
     $layout_content = include_template('layout.php',[
         'content' => $content,
+        'connect' => $connect,
         'category' => $category,
         'tasks' => $tasks,
         'title_page' => $title_page,
-        'username' => $username
+        //'username' => $username,
+        'current_user_email' => $current_user_email
         ]);
 
     print($layout_content);

@@ -24,7 +24,7 @@
         set_timezone($my_timezone);
         foreach($tasks as $tasks_key => $tasks_value): ?>
         <?php if ((($show_complete_tasks === 1) and ($show_complete_tasks === $tasks_value['completed'])) or ($tasks_value['completed'] === 0)): ?>
-        <tr class="tasks__item task <?= get_task_class_completed_and_important($tasks_value, $deadline); ?>">
+        <tr class="tasks__item task <?=get_task_class_completed_and_important($tasks_value, $deadline);?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
                         <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">

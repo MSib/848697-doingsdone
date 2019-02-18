@@ -45,4 +45,16 @@
             }
         return $result;
     };
+
+    function get_username_from_db($connect, $email) {
+        if ($connect == false) {
+            $result = 'Error DB';
+        } else {
+            $sql = "SELECT username FROM users WHERE email = '$email';";
+            $req = mysqli_query($connect, $sql);
+            $result = $req[0];
+        };
+        return $result;
+    }
+
 ?>
