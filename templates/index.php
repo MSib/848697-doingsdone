@@ -36,7 +36,7 @@
                     <a class="download-link" href="#">Home.psd</a>
                 </td>
 
-                <td class="task__date"><?php if ($tasks_value['day_of_complete'] !== NULL) { echo date('d.m.Y', strtotime($tasks_value['day_of_complete'])); } else { echo 'Нет'; } ?>
+                <td class="task__date"><?php if ($tasks_value['day_of_complete'] !== NULL) { echo date('d.m.Y', strtotime(strip_tags($tasks_value['day_of_complete']))); } else { echo 'Нет'; } ?>
                 </td>
             </tr>
         <?php endif; ?>
