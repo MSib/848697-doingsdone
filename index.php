@@ -8,6 +8,21 @@
 
     $tasks = get_tasks_current_user($connect, $current_user_email);
 
+    if (isset($_GET['cat'])) {
+        if (true) {
+            // выбранный проект
+            echo 'Значение: ' . (int)$_GET['cat'];
+        } else {
+            // 404
+            header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+            exit;
+        }
+    } else {
+        // все проекты
+        echo 'Значение отсутствует';
+    }
+
+    // Начало HTML кода
     $content = include_template('index.php',[
         'category' => $category,
         'tasks' => $tasks,
