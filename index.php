@@ -4,6 +4,10 @@
 
     require_once('functions.php');
 
+    $category = get_projects_current_user($connect, $current_user_email);
+
+    $tasks = get_tasks_current_user($connect, $current_user_email);
+
     $content = include_template('index.php',[
         'category' => $category,
         'tasks' => $tasks,
