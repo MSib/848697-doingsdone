@@ -22,7 +22,7 @@
 <table class="tasks">
     <?php
         set_timezone($my_timezone);
-        foreach($tasks as $tasks_key => $tasks_value): ?>
+        foreach($tasks_from_project as $tasks_key => $tasks_value): ?>
         <?php if ((($show_complete_tasks === 1) and ($show_complete_tasks === (int)$tasks_value['completed'])) or ((int)$tasks_value['completed'] === 0)): ?>
         <tr class="tasks__item task <?=get_task_class_completed_and_important($tasks_value, $deadline);?>">
                 <td class="task__select">
