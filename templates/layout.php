@@ -42,10 +42,9 @@
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-
                         <?php foreach($category as $category_key => $category_value): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="<?=$_SERVER['SCRIPT_NAME'] . '?cat=' . (int)$category_value['id'];?>"><?php echo strip_tags($category_value['title']); ?></a>
+                            <a class="main-navigation__list-item-link" href="<?='/index.php?cat=' . (int)$category_value['id'];?>"><?php echo strip_tags($category_value['title']); ?></a>
                             <span class="main-navigation__list-item-count"><?=count_matches_in_array($tasks, $category_value['title']); ?></span>
                         </li>
                         <?php endforeach; ?>
