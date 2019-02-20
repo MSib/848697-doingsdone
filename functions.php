@@ -35,6 +35,7 @@
         return date_default_timezone_get();
     };
 
+    // Определяем дополнительные классы для задач (выполненные, и с исходящим сроком выполнения)
     function get_task_class_completed_and_important ($tasks_value, $deadline) {
         $result;
             if ((int)$tasks_value['completed'] === 1) {
@@ -46,6 +47,7 @@
         return $result;
     };
 
+    // Выполнение запросов выборки
     function db_fetch_data($connect, $sql) {
         $result = [];
         if ($connect) {
@@ -59,22 +61,51 @@
 
     };
 
+    // Получаем имя пользователя из БД
     function get_username_from_db($connect, $email) {
         $sql = "SELECT username FROM users WHERE email =  '" . htmlspecialchars($email) . "';";
         $result = db_fetch_data($connect, $sql)[0]['username'];
         return $result;
     };
 
+    // Получаем из БД список проектов для текущего пользователя
     function get_projects_current_user($connect, $email) {
-        $sql = "SELECT projects.title FROM projects JOIN users ON users.id = projects.user_id WHERE users.email = '" . htmlspecialchars($email) . "' ORDER BY projects.title ASC";
+        $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id WHERE users.email = '" . htmlspecialchars($email) . "' ORDER BY projects.title ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
 
+    // Получаем из БД список задач для текущего пользователя
     function get_tasks_current_user($connect, $email) {
-        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, tasks.status AS completed FROM users JOIN tasks ON tasks.user_id = users.id JOIN projects ON tasks.project_id = projects.id WHERE users.email = '" . htmlspecialchars($email) . "'";
+        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed FROM users JOIN tasks ON tasks.user_id = users.id JOIN projects ON tasks.project_id = projects.id WHERE users.email = '" . htmlspecialchars($email) . "'";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
 
+    // Проверка на существование параметра с идентификатором проекта
+    function check_param_project($cat, $category) {
+        if (isset($cat)) {
+            if (in_array((int)$cat, array_column($category, 'id'))) {
+                return (int)$cat;
+            } else {
+                header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+                exit;
+            }
+        }
+    }
+
+    // Отсеять задачи, оставить только для выбранного проекта, если проект не выбран, то вернёт все задачи
+    function select_task_from_project($tasks, $cat_id) {
+        $result = [];
+        if (isset($cat_id)){
+            foreach ($tasks as $task_value) {
+                if ($task_value['category_id'] ===  (string)$cat_id) {
+                    $result[] = $task_value;
+                };
+            };
+        } else {
+            $result = $tasks;
+        };
+        return $result;
+    }
 ?>
