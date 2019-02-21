@@ -7,6 +7,9 @@
     // Запрос в БД, список проектов для текущего пользователя
     $category = get_projects_current_user($connect, $current_user_email);
 
+    // Запрос в БД, список всех проектов
+    $categories = get_projects($connect);
+
     // Если есть параметр 'cat', то передаём в переменную, иначе ничего не записываем
     $go_to_category = check_param_project($_GET['cat'], $category);
 
@@ -20,8 +23,9 @@
 
 
     // Начало HTML кода
-    $content = include_template('form-task.html',[
-]);
+    $content = include_template('form-task.php',[
+        'categories' => $categories,
+    ]);
 
     $layout_content = include_template('layout.php',[
         'content' => $content,

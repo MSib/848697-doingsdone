@@ -68,6 +68,13 @@
         return $result;
     };
 
+    // Получаем из БД список всех проектов
+    function get_projects($connect) {
+        $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id ORDER BY projects.title ASC";
+        $result = db_fetch_data($connect, $sql);
+        return $result;
+    }
+
     // Получаем из БД список проектов для текущего пользователя
     function get_projects_current_user($connect, $email) {
         $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id WHERE users.email = '" . htmlspecialchars($email) . "' ORDER BY projects.title ASC";

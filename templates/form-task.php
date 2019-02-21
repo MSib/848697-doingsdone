@@ -1,6 +1,6 @@
 <h2 class="content__main-heading">Добавление задачи</h2>
 
-<form class="form"  action="index.html" method="post">
+<form class="form"  action="index.html" method="post" autocomplete="off">
   <div class="form__row">
     <label class="form__label" for="name">Название <sup>*</sup></label>
 
@@ -11,7 +11,9 @@
     <label class="form__label" for="project">Проект</label>
 
     <select class="form__input form__input--select" name="project" id="project">
-      <option value="">Входящие</option>
+      <?php foreach ($categories as $categories_value):?>
+        <option value="<?=$categories_value['id'];?>"><?=$categories_value['title'];?></option>
+      <?php endforeach; ?>
     </select>
   </div>
 
