@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?=get_username_from_db($connect, $current_user_email); ?></p>
+                        <p><?=get_username_from_db($connect, $current_user_id); ?></p>
 
                         <a href="#">Выйти</a>
                     </div>

@@ -7,13 +7,13 @@
     require_once('functions.php');
 
     // Запрос в БД, список проектов для текущего пользователя
-    $category = get_projects_current_user($connect, $current_user_email);
+    $category = get_projects_current_user($connect, $current_user_id);
 
     // Если есть параметр 'cat', то передаём в переменную, иначе ничего не записываем
     $go_to_category = check_param_project($_GET['cat'], $category);
 
     // Запрос в БД, список задач для текущего пользователя
-    $tasks = get_tasks_current_user($connect, $current_user_email);
+    $tasks = get_tasks_current_user($connect, $current_user_id);
 
     // Если есть id категории, то применяем только задачи для этой категории
     // при неправильном значении - 404
@@ -38,7 +38,7 @@
         'category' => $category,
         'tasks' => $tasks,
         'title_page' => $title_page,
-        'current_user_email' => $current_user_email
+        'current_user_id' => $current_user_id
         ]);
 
     print($layout_content);

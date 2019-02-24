@@ -62,8 +62,8 @@
     };
 
     // Получаем имя пользователя из БД
-    function get_username_from_db($connect, $email) {
-        $sql = "SELECT username FROM users WHERE email =  '" . htmlspecialchars($email) . "';";
+    function get_username_from_db($connect, $user_id) {
+        $sql = "SELECT username FROM users WHERE id =  '" . mysqli_real_escape_string($connect, $user_id) . "';";
         $result = db_fetch_data($connect, $sql)[0]['username'];
         return $result;
     };
@@ -76,15 +76,15 @@
     }
 
     // Получаем из БД список проектов для текущего пользователя
-    function get_projects_current_user($connect, $email) {
-        $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id WHERE users.email = '" . htmlspecialchars($email) . "' ORDER BY projects.title ASC";
+    function get_projects_current_user($connect, $user_id) {
+        $sql = "SELECT title, id FROM projects WHERE user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY title ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
 
     // Получаем из БД список задач для текущего пользователя
-    function get_tasks_current_user($connect, $email) {
-        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed FROM users JOIN tasks ON tasks.user_id = users.id JOIN projects ON tasks.project_id = projects.id WHERE users.email = '" . htmlspecialchars($email) . "'";
+    function get_tasks_current_user($connect, $user_id) {
+        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "'";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
