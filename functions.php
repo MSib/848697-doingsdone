@@ -115,4 +115,22 @@
         };
         return $result;
     }
+
+    function validate_form_add($post) {
+        $result = [];
+        if (isset ($post['name'])) {
+
+        }
+        if (isset ($post['project'])) {
+
+        }
+        if (isset ($post['date'])) {
+
+        }
+        if (isset ($post['preview'])) {
+
+        }
+        return $result;
+    }
+
 ?>

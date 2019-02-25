@@ -16,6 +16,12 @@
     // Запрос в БД, список задач для текущего пользователя
     $tasks = get_tasks_current_user($connect, $current_user_id);
 
+    // Массив с ошибками формы
+    if (!empty($_POST)) {
+        $errors = validate_form_add($_POST);
+    }
+
+
 
     // Начало HTML кода
     $content = include_template('form-task.php',[
