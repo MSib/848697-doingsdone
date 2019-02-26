@@ -116,8 +116,23 @@
         return $result;
     }
 
+    /**
+     * Функция
+     * Проверяет, что переданная дата соответствует формату ДД.ММ.ГГГГ
+     * @param string $date строка с датой
+     * @return bool
+     */
+    function check_date_format($date) {
+        $result = false;
+        $regexp = '/(\d{2})\.(\d{2})\.(\d{4})/m';
+        if (preg_match($regexp, $date, $parts) && count($parts) == 4) {
+            $result = checkdate($parts[2], $parts[1], $parts[3]);
+        }
+        return $result;
+    }
+
     // Проверка даты
-    function validateDate($date, $format = 'd.m.Y H:i:s') {
+    function validateDate($date, $format = 'd.m.Y') {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     };
@@ -125,9 +140,9 @@
     // Проверка валидации формы добавления задачи
     function validate_form_add($task, $categories) {
         $errors = [];
-        /*if (empty($task['name'])) {
+        if (empty($task['name'])) {
             $errors['name'] = 'Это поле надо заполнить';
-        };*/
+        };
 
         if (!empty($task['project'])) {
             if (!in_array((int)$task['project'], array_column($categories, 'id'))) {
@@ -138,26 +153,19 @@
         };
 
         if (!empty($task['date'])) {
-            if (!validateDate($task['date'], 'd.m.Y')) {
+            if (!validateDate($task['date'])) {
                 var_dump($task['date']);
                 $errors['date'] = 'Неверная дата';
             };
         };
 
-        if (!empty($task['preview'])) {
-        };
-        if (isset($_FILES['preview']['name'])) {
+        if (!empty($_FILES['preview']['name'])) {
             if (!$_FILES['preview']['error']) {
                 if (!$_FILES['preview']['size']) {
                     $errors['preview'] = 'Выбран пустой файл';
-                } elseif ($_FILES['preview']['size'] > 100000000) {
-                    $errors['preview'] = 'Слишком большой файл';
-                } else {
-                    print_r('type: '.$_FILES['preview']['type'] . ' | ');
-                    print_r('size: '.$_FILES['preview']['size']);
                 };
             } else {
-                $errors['preview'] = 'Ошибка загрузки файла';
+                $errors['preview'] = 'Ошибка загрузки файла: ' . $_FILES['preview']['error'];
             };
         };
         return $errors;
