@@ -116,21 +116,51 @@
         return $result;
     }
 
-    function validate_form_add($post) {
-        $result = [];
-        if (isset ($post['name'])) {
+    // Проверка даты
+    function validateDate($date, $format = 'd.m.Y H:i:s') {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    };
 
-        }
-        if (isset ($post['project'])) {
+    // Проверка валидации формы добавления задачи
+    function validate_form_add($task, $categories) {
+        $errors = [];
+        /*if (empty($task['name'])) {
+            $errors['name'] = 'Это поле надо заполнить';
+        };*/
 
-        }
-        if (isset ($post['date'])) {
+        if (!empty($task['project'])) {
+            if (!in_array((int)$task['project'], array_column($categories, 'id'))) {
+                $errors['project'] = 'Проект не найден, выберите другой проект из списка';
+            };
+        } else {
+            $errors['project'] = 'Проект не выбран, выберите проект из списка';
+        };
 
-        }
-        if (isset ($post['preview'])) {
+        if (!empty($task['date'])) {
+            if (!validateDate($task['date'], 'd.m.Y')) {
+                var_dump($task['date']);
+                $errors['date'] = 'Неверная дата';
+            };
+        };
 
-        }
-        return $result;
+        if (!empty($task['preview'])) {
+        };
+        if (isset($_FILES['preview']['name'])) {
+            if (!$_FILES['preview']['error']) {
+                if (!$_FILES['preview']['size']) {
+                    $errors['preview'] = 'Выбран пустой файл';
+                } elseif ($_FILES['preview']['size'] > 100000000) {
+                    $errors['preview'] = 'Слишком большой файл';
+                } else {
+                    print_r('type: '.$_FILES['preview']['type'] . ' | ');
+                    print_r('size: '.$_FILES['preview']['size']);
+                };
+            } else {
+                $errors['preview'] = 'Ошибка загрузки файла';
+            };
+        };
+        return $errors;
     }
 
 ?>

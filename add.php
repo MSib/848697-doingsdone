@@ -15,12 +15,18 @@
 
     // Запрос в БД, список задач для текущего пользователя
     $tasks = get_tasks_current_user($connect, $current_user_id);
+    print_r($post_max_size);
 
-    // Массив с ошибками формы
-    if (!empty($_POST)) {
-        $errors = validate_form_add($_POST);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $task = $_POST;
+        if (!empty($task)) {
+            // Массив с ошибками формы
+            $errors = validate_form_add($task, $categories);
+            if (!empty($errors)) {
+                print_r($errors);
+            };
+        };
     }
-
 
 
     // Начало HTML кода
