@@ -24,9 +24,21 @@
 
             // Если ошибок нет, то выполняем запрос, и очищаем поля
             if (empty($errors)) {
+                //var_dump($_FILES);
+                /*
+                print(
+                    $_FILES['preview']['name'] . '     ' .
+                    $_FILES['preview']['type'] . '     ' .
+                    $_FILES['preview']['tmp_name'] . '     ' .
+                    $_FILES['preview']['error'] . '     ' .
+                    $_FILES['preview']['size'] . '     ');*/
+                $fi = finfo_open(FILEINFO_MIME_TYPE);
+                $fn = $_FILES['preview']['tmp_name'];
+                $ft = finfo_file($fi, $fn);
+                var_dump($ft . '     ' . $_FILES['preview']['type']);
                 // тут будет запрос в БД
                 unset($task);
-                header("Location: index.php?task=add");
+                //header("Location: index.php?task=add");
             };
         };
     }

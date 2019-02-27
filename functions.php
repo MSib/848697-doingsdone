@@ -169,13 +169,4 @@
         };
         return $errors;
     };
-
-    // Преобразую дату из POST в формат Y-m-d для input data
-    function get_date_from_post($task, $errors) {
-        return ($task['date'] && !$errors['date']) ? $date_value = date('Y-m-d', strtotime(strip_tags($task['date']))) : NULL;
-    };
-
-    function set_error_field_for_input($errors, $name) {
-        return (isset($errors[$name])) ? '<p class="form__message">' . $errors[$name] . '</p>' : NULL;
-    };
 ?>

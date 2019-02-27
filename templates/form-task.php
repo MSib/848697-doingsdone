@@ -19,7 +19,7 @@
 
   <div class="form__row">
     <label class="form__label" for="date">Дата выполнения</label>
-    <input class="form__input form__input--date<?=(isset($errors['date'])) ? ' form__input--error' : NULL;?>" type="date" name="date" id="date" value="<?=get_date_from_post($task, $errors);?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
+    <input class="form__input form__input--date<?=(isset($errors['date'])) ? ' form__input--error' : NULL;?>" type="date" name="date" id="date" value="<?=($task['date'] && !$errors['date']) ? $date_value = date('Y-m-d', strtotime(strip_tags($task['date']))) : NULL;?>" placeholder="Введите дату в формате ДД.ММ.ГГГГ">
     <?=(isset($errors['date'])) ? '<p class="form__message">' . $errors['date'] . '</p>' : NULL;?>
   </div>
 
