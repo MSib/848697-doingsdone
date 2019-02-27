@@ -70,7 +70,7 @@
 
     // Получаем из БД список всех проектов
     function get_projects($connect) {
-        $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id ORDER BY projects.title ASC";
+        $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id ORDER BY projects.id DESC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
