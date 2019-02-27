@@ -21,9 +21,13 @@
         if (!empty($task)) {
             // Массив с ошибками формы
             $errors = validate_form_add($task, $categories);
-            /*if (!empty($errors)) {
-                print_r($errors);
-            };*/
+
+            // Если ошибок нет, то выполняем запрос, и очищаем поля
+            if (empty($errors)) {
+                // тут будет запрос в БД
+                unset($task);
+                header("Location: index.php?task=add");
+            };
         };
     }
 
