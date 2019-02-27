@@ -15,16 +15,15 @@
 
     // Запрос в БД, список задач для текущего пользователя
     $tasks = get_tasks_current_user($connect, $current_user_id);
-    print_r($post_max_size);
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $task = $_POST;
         if (!empty($task)) {
             // Массив с ошибками формы
             $errors = validate_form_add($task, $categories);
-            if (!empty($errors)) {
+            /*if (!empty($errors)) {
                 print_r($errors);
-            };
+            };*/
         };
     }
 
@@ -32,6 +31,9 @@
     // Начало HTML кода
     $content = include_template('form-task.php',[
         'categories' => $categories,
+        'task' => $task,
+        'errors' => $errors,
+        'get_date_from_post' => $get_date_from_post,
     ]);
 
     $layout_content = include_template('layout.php',[

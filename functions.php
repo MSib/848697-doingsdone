@@ -154,7 +154,6 @@
 
         if (!empty($task['date'])) {
             if (!validateDate($task['date'])) {
-                var_dump($task['date']);
                 $errors['date'] = 'Неверная дата';
             };
         };
@@ -169,6 +168,9 @@
             };
         };
         return $errors;
-    }
+    };
 
+    function get_date_from_post($task, $errors) {
+        return ($task['date'] && !$errors['date']) ? $date_value = date('Y-m-d', strtotime(strip_tags($task['date']))) : '';
+    };
 ?>
