@@ -169,4 +169,33 @@
         };
         return $errors;
     };
+
+    function add_task($link, $id, $task, $file) {
+        $result = [];
+        if ($link) {
+            mysqli_set_charset($link, "utf8");
+            $file_path = isset($file['preview']['tmp_name']) ? mysqli_real_escape_string($link, $file['preview']['tmp_name']) : NULL;
+            $date = !empty($task['date']) ? mysqli_real_escape_string($link, date('Y-m-d', strtotime($task['date']))) : NULL;
+            $project = isset($task['project']) ? mysqli_real_escape_string($link, $task['project']) : NULL;
+            $id = isset($id) ? mysqli_real_escape_string($link, $id) : NULL;
+            $name = isset($task['name']) ? mysqli_real_escape_string($link, $task['name']) : NULL;
+            $sql = "INSERT INTO tasks (
+                    title,
+                    user_id,
+                    project_id
+                    " . (isset($date) ? ', date_execution' : '') . "
+                    " . (!empty($file_path) ? ', file' : '') . "
+                ) VALUES ('" .
+                    $name . "', '" .
+                    $id . "', '" .
+                    $project . "'" .
+                    (isset($date) ? ", '" . $date . "'" : "") . "" .
+                    (!empty($file_path) ? ", '" . $file_path . "'" : "") . "
+                )";
+            $result = mysqli_query($link, $sql);
+        } else {
+            $result = 'Ошибка БД: ' . mysqli_error($link);
+        };
+        return $result;
+    };
 ?>

@@ -32,13 +32,22 @@
                     $_FILES['preview']['tmp_name'] . '     ' .
                     $_FILES['preview']['error'] . '     ' .
                     $_FILES['preview']['size'] . '     ');*/
+                /*
                 $fi = finfo_open(FILEINFO_MIME_TYPE);
                 $fn = $_FILES['preview']['tmp_name'];
                 $ft = finfo_file($fi, $fn);
-                var_dump($ft . '     ' . $_FILES['preview']['type']);
-                // тут будет запрос в БД
-                unset($task);
-                //header("Location: index.php?task=add");
+                var_dump($ft . '     ' . $_FILES['preview']['type']);*/
+
+                $res = add_task($connect, $current_user_id, $task, $_FILES);
+                // Если ошибок не возникло, переходим на главную страницу
+                if ($res) {
+                    unset($task);
+                    header("Location: index.php?task=add");
+                    exit;
+                } else {
+                    print('Ошибка добавления задачи');
+                    exit;
+                };
             };
         };
     }
