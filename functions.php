@@ -62,22 +62,29 @@
     };
 
     // Получаем имя пользователя из БД
-    function get_username_from_db($connect, $email) {
-        $sql = "SELECT username FROM users WHERE email =  '" . htmlspecialchars($email) . "';";
+    function get_username_from_db($connect, $user_id) {
+        $sql = "SELECT username FROM users WHERE id =  '" . mysqli_real_escape_string($connect, $user_id) . "';";
         $result = db_fetch_data($connect, $sql)[0]['username'];
         return $result;
     };
 
+    // Получаем из БД список всех проектов
+    function get_projects($connect) {
+        $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id ORDER BY projects.id DESC";
+        $result = db_fetch_data($connect, $sql);
+        return $result;
+    }
+
     // Получаем из БД список проектов для текущего пользователя
-    function get_projects_current_user($connect, $email) {
-        $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id WHERE users.email = '" . htmlspecialchars($email) . "' ORDER BY projects.title ASC";
+    function get_projects_current_user($connect, $user_id) {
+        $sql = "SELECT title, id FROM projects WHERE user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY title ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
 
     // Получаем из БД список задач для текущего пользователя
-    function get_tasks_current_user($connect, $email) {
-        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed FROM users JOIN tasks ON tasks.user_id = users.id JOIN projects ON tasks.project_id = projects.id WHERE users.email = '" . htmlspecialchars($email) . "'";
+    function get_tasks_current_user($connect, $user_id) {
+        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed, tasks.file AS file FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY date_create ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
@@ -108,4 +115,90 @@
         };
         return $result;
     }
+
+    /**
+     * Функция
+     * Проверяет, что переданная дата соответствует формату ДД.ММ.ГГГГ
+     * @param string $date строка с датой
+     * @return bool
+     */
+    function check_date_format($date) {
+        $result = false;
+        $regexp = '/(\d{2})\.(\d{2})\.(\d{4})/m';
+        if (preg_match($regexp, $date, $parts) && count($parts) == 4) {
+            $result = checkdate($parts[2], $parts[1], $parts[3]);
+        }
+        return $result;
+    }
+
+    // Проверка даты
+    function validateDate($date, $format = 'd.m.Y') {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    };
+
+    // Проверка валидации формы добавления задачи
+    function validate_form_add($task, $categories) {
+        $errors = [];
+        if (empty($task['name'])) {
+            $errors['name'] = 'Это поле надо заполнить';
+        };
+
+        if (!empty($task['project'])) {
+            if (!in_array((int)$task['project'], array_column($categories, 'id'))) {
+                $errors['project'] = 'Проект не найден, выберите другой проект из списка';
+            };
+        } else {
+            $errors['project'] = 'Проект не выбран, выберите проект из списка';
+        };
+
+        if (!empty($task['date'])) {
+            if (!validateDate($task['date'])) {
+                $errors['date'] = 'Неверная дата';
+            };
+            if (strtotime($task['date']) < strtotime(midnight)) {
+                $errors['date'] = 'Дата выполнения должна быть в будущем';
+            };
+        };
+
+        if (!empty($_FILES['preview']['name'])) {
+            if (!$_FILES['preview']['error']) {
+                if (!$_FILES['preview']['size']) {
+                    $errors['preview'] = 'Выбран пустой файл';
+                };
+            } else {
+                $errors['preview'] = 'Ошибка загрузки файла: ' . $_FILES['preview']['error'];
+            };
+        };
+        return $errors;
+    };
+
+    function add_task($link, $id, $task, $file) {
+        $result = [];
+        if ($link) {
+            mysqli_set_charset($link, "utf8");
+            $file_path = isset($file) ? mysqli_real_escape_string($link, $file) : NULL;
+            $date = !empty($task['date']) ? mysqli_real_escape_string($link, date('Y-m-d', strtotime($task['date']))) : NULL;
+            $project = isset($task['project']) ? mysqli_real_escape_string($link, $task['project']) : NULL;
+            $id = isset($id) ? mysqli_real_escape_string($link, $id) : NULL;
+            $name = isset($task['name']) ? mysqli_real_escape_string($link, $task['name']) : NULL;
+            $sql = "INSERT INTO tasks (
+                    title,
+                    user_id,
+                    project_id
+                    " . (isset($date) ? ', date_execution' : '') . "
+                    " . (!empty($file_path) ? ', file' : '') . "
+                ) VALUES ('" .
+                    $name . "', '" .
+                    $id . "', '" .
+                    $project . "'" .
+                    (isset($date) ? ", '" . $date . "'" : "") . "" .
+                    (!empty($file_path) ? ", '" . $file_path . "'" : "") . "
+                )";
+            $result = mysqli_query($link, $sql);
+        } else {
+            $result = 'Ошибка БД: ' . mysqli_error($link);
+        };
+        return $result;
+    };
 ?>

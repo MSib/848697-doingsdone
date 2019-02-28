@@ -6,7 +6,7 @@
     $show_complete_tasks = rand(0, 1);
 
     //Информация о текущем пользователе
-    $current_user_email = 'viktor@mydomain.ru';
+    $current_user_id = '1';
 
     // Название страницы
     $title_page = 'Дела в порядке';

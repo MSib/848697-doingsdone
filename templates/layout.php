@@ -20,7 +20,7 @@
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="pages/form-task.html">Добавить задачу</a>
+                <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
 
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__image">
@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?=get_username_from_db($connect, $current_user_email); ?></p>
+                        <p><?=get_username_from_db($connect, $current_user_id); ?></p>
 
                         <a href="#">Выйти</a>
                     </div>
@@ -42,10 +42,9 @@
 
                 <nav class="main-navigation">
                     <ul class="main-navigation__list">
-
                         <?php foreach($category as $category_key => $category_value): ?>
                         <li class="main-navigation__list-item">
-                            <a class="main-navigation__list-item-link" href="<?=$_SERVER['SCRIPT_NAME'] . '?cat=' . (int)$category_value['id'];?>"><?php echo strip_tags($category_value['title']); ?></a>
+                            <a class="main-navigation__list-item-link" href="<?='/index.php?cat=' . (int)$category_value['id'];?>"><?php echo strip_tags($category_value['title']); ?></a>
                             <span class="main-navigation__list-item-count"><?=count_matches_in_array($tasks, $category_value['title']); ?></span>
                         </li>
                         <?php endforeach; ?>
@@ -71,7 +70,7 @@
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
 
-        <a class="main-footer__button button button--plus" href="pages/form-task.html">Добавить задачу</a>
+        <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
