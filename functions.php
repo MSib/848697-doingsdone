@@ -156,6 +156,9 @@
             if (!validateDate($task['date'])) {
                 $errors['date'] = 'Неверная дата';
             };
+            if (strtotime($task['date']) < strtotime(midnight)) {
+                $errors['date'] = 'Дата выполнения должна быть в будущем';
+            };
         };
 
         if (!empty($_FILES['preview']['name'])) {
