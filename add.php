@@ -25,9 +25,11 @@
             // Если ошибок нет, то выполняем запрос, и очищаем поля
             if (empty($errors)) {
                 $file = $_FILES['preview'];
-                $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-                $filename = uniqid() . (!empty($extension) ? '.' : '') . $extension;
-                move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $filename);
+                if (!empty($file['name'])) {
+                    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                    $filename = uniqid() . (!empty($extension) ? '.' : '') . $extension;
+                    move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $filename);
+                };
                 $res = add_task($connect, $current_user_id, $task, $filename);
 
                 // Если ошибок не возникло, переходим на главную страницу
