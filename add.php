@@ -15,8 +15,7 @@
 
     // Запрос в БД, список задач для текущего пользователя
     $tasks = get_tasks_current_user($connect, $current_user_id);
-//var_dump(isset($tasks[0]['file']));
-//var_dump($_SERVER['DOCUMENT_ROOT']);
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $task = $_POST;
         if (!empty($task)) {
@@ -37,8 +36,7 @@
                     header("Location: index.php");
                     exit;
                 } else {
-                    print('Ошибка добавления задачи');
-                    exit;
+                    $error_page[] = 'Ошибка добавления задачи';
                 };
             };
         };
@@ -46,13 +44,14 @@
 
 
     // Начало HTML кода
-    $content = include_template('form-task.php',[
+    $content = (empty($error_page)) ? include_template('form-task.php',[
         'categories' => $categories,
         'task' => $task,
         'errors' => $errors,
-        'get_date_from_post' => $get_date_from_post,
-    ]);
-
+        'get_date_from_post' => $get_date_from_post
+        ]) : include_template('error.php',[
+        'error_page' => $error_page
+        ]);
     $layout_content = include_template('layout.php',[
         'content' => $content,
         'connect' => $connect,
