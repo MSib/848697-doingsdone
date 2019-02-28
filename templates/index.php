@@ -31,11 +31,11 @@
                         <span class="checkbox__text"><?=htmlspecialchars($tasks_value['task']);?></span>
                     </label>
                 </td>
-
                 <td class="task__file">
-                    <a class="download-link" href="#">Home.psd</a>
+                    <?php if (htmlspecialchars($tasks_value['file'])):?>
+                        <a class="download-link" href="/<?=htmlspecialchars($tasks_value['file'])?>"><?=htmlspecialchars($tasks_value['file'])?></a>
+                    <?php endif; ?>
                 </td>
-
                 <td class="task__date"><?php if ($tasks_value['day_of_complete'] !== NULL) { echo date('d.m.Y', strtotime(strip_tags($tasks_value['day_of_complete']))); } else { echo 'Нет'; } ?>
                 </td>
             </tr>

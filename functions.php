@@ -84,7 +84,7 @@
 
     // Получаем из БД список задач для текущего пользователя
     function get_tasks_current_user($connect, $user_id) {
-        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY date_create ASC";
+        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed, tasks.file AS file FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY date_create ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
@@ -174,7 +174,7 @@
         $result = [];
         if ($link) {
             mysqli_set_charset($link, "utf8");
-            $file_path = isset($file['preview']['tmp_name']) ? mysqli_real_escape_string($link, $file['preview']['tmp_name']) : NULL;
+            $file_path = isset($file) ? mysqli_real_escape_string($link, $file) : NULL;
             $date = !empty($task['date']) ? mysqli_real_escape_string($link, date('Y-m-d', strtotime($task['date']))) : NULL;
             $project = isset($task['project']) ? mysqli_real_escape_string($link, $task['project']) : NULL;
             $id = isset($id) ? mysqli_real_escape_string($link, $id) : NULL;

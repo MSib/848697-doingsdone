@@ -15,7 +15,8 @@
 
     // Запрос в БД, список задач для текущего пользователя
     $tasks = get_tasks_current_user($connect, $current_user_id);
-
+//var_dump(isset($tasks[0]['file']));
+//var_dump($_SERVER['DOCUMENT_ROOT']);
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $task = $_POST;
         if (!empty($task)) {
@@ -24,25 +25,16 @@
 
             // Если ошибок нет, то выполняем запрос, и очищаем поля
             if (empty($errors)) {
-                //var_dump($_FILES);
-                /*
-                print(
-                    $_FILES['preview']['name'] . '     ' .
-                    $_FILES['preview']['type'] . '     ' .
-                    $_FILES['preview']['tmp_name'] . '     ' .
-                    $_FILES['preview']['error'] . '     ' .
-                    $_FILES['preview']['size'] . '     ');*/
-                /*
-                $fi = finfo_open(FILEINFO_MIME_TYPE);
-                $fn = $_FILES['preview']['tmp_name'];
-                $ft = finfo_file($fi, $fn);
-                var_dump($ft . '     ' . $_FILES['preview']['type']);*/
+                $file = $_FILES['preview'];
+                $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $filename = uniqid() . '.' . $extension;
+                move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $filename);
+                $res = add_task($connect, $current_user_id, $task, $filename);
 
-                $res = add_task($connect, $current_user_id, $task, $_FILES);
                 // Если ошибок не возникло, переходим на главную страницу
                 if ($res) {
                     unset($task);
-                    header("Location: index.php?task=add");
+                    header("Location: index.php");
                     exit;
                 } else {
                     print('Ошибка добавления задачи');
