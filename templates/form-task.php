@@ -33,9 +33,9 @@
     </div>
     <?=(isset($errors['preview'])) ? '<p class="form__message">' . $errors['preview'] . '</p>' : NULL;?>
   </div>
-<?=(!empty($errors)) ? '<p style="font-style: italic; color: #f84646;">Пожалуйста, исправьте ошибки в форме</p>' : NULL;?>
 
   <div class="form__row form__row--controls">
+    <?=(!empty($errors)) ? '<p class="error-message">Пожалуйста, исправьте ошибки в форме</p>' : NULL;?>
     <input class="button" type="submit" name="" value="Добавить">
   </div>
 </form>
