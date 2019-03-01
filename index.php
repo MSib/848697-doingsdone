@@ -6,6 +6,9 @@
 
     require_once('functions.php');
 
+    // Запрос имени пользователя
+    $username = get_username_from_db($connect, $current_user_id);
+
     // Запрос в БД, список проектов для текущего пользователя
     $category = get_projects_current_user($connect, $current_user_id);
 
@@ -19,7 +22,6 @@
     // при неправильном значении - 404
     // при отсутсвии значения - весь список задач для текущего пользователя
     $tasks_from_project = select_task_from_project($tasks, $go_to_category);
-
 
     // Начало HTML кода
     $content = include_template('index.php',[
@@ -38,9 +40,9 @@
         'category' => $category,
         'tasks' => $tasks,
         'title_page' => $title_page,
+        'username' => $username,
         'current_user_id' => $current_user_id
         ]);
 
     print($layout_content);
-
 ?>

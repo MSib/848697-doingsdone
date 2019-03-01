@@ -4,6 +4,9 @@
 
     require_once('functions.php');
 
+    // Запрос имени пользователя
+    $username = get_username_from_db($connect, $current_user_id);
+
     // Запрос в БД, список проектов для текущего пользователя
     $category = get_projects_current_user($connect, $current_user_id);
 
@@ -38,8 +41,10 @@
                     header("Location: index.php");
                     exit;
                 } else {
-                    $error_page[] = 'Ошибка добавления задачи';
+                    $error_page[] = 'Ошибка выполнения запроса добавления задачи';
                 };
+            } elseif(empty($username)) {
+                $error_page[] = 'Ошибка добавления задачи. Пользователь не найден.';
             };
         };
     }
@@ -60,9 +65,9 @@
         'category' => $category,
         'tasks' => $tasks,
         'title_page' => $title_page,
+        'username' => $username,
         'current_user_id' => $current_user_id
         ]);
 
     print($layout_content);
-
 ?>

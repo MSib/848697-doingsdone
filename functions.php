@@ -77,7 +77,7 @@
 
     // Получаем из БД список проектов для текущего пользователя
     function get_projects_current_user($connect, $user_id) {
-        $sql = "SELECT title, id FROM projects WHERE user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY title ASC";
+        $sql = "SELECT DISTINCT projects.title AS title,  projects.id AS id FROM tasks JOIN projects ON tasks.user_id = projects.user_id AND tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY title ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }

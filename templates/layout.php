@@ -20,6 +20,7 @@
             </a>
 
             <div class="main-header__side">
+                <?php if (isset($current_user_id) && !empty($username)):?>
                 <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
 
                 <div class="main-header__side-item user-menu">
@@ -28,16 +29,20 @@
                     </div>
 
                     <div class="user-menu__data">
-                        <p><?=get_username_from_db($connect, $current_user_id); ?></p>
+                        <p><?=$username; ?></p>
 
                         <a href="#">Выйти</a>
                     </div>
                 </div>
+                <?php else:?>
+                  <a class="main-header__side-item button button--transparent" href="form-authorization.html">Войти</a>
+                <?php endif; ?>
             </div>
         </header>
 
         <div class="content">
             <section class="content__side">
+                <?php if (isset($current_user_id) && !empty($username)):?>
                 <h2 class="content__side-heading">Проекты</h2>
 
                 <nav class="main-navigation">
@@ -53,6 +58,10 @@
 
                 <a class="button button--transparent button--plus content__side-button"
                    href="pages/form-project.html" target="project_add">Добавить проект</a>
+                <?php else:?>
+                    <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+                    <a class="button button--transparent content__side-button" href="form-authorization.html">Войти</a>
+                <?php endif; ?>
             </section>
 
             <main class="content__main">
