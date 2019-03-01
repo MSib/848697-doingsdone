@@ -13,7 +13,7 @@ CREATE TABLE projects (
 CREATE TABLE tasks (
     id INT AUTO_INCREMENT PRIMARY KEY NOT NULL UNIQUE,
     user_id INT NOT NULL,
-    project_id INT,
+    project_id INT NOT NULL,
     date_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     date_completed TIMESTAMP,
     status INT DEFAULT 0,
@@ -27,7 +27,8 @@ CREATE TABLE users (
     date_registration TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     email VARCHAR(100) NOT NULL UNIQUE,
     username VARCHAR(30) NOT NULL,
-    password VARCHAR(40) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    code VARCHAR(255)
 );
 
 CREATE INDEX user_id_index ON projects(user_id);
