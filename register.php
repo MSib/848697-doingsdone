@@ -23,7 +23,7 @@
         $register = $_POST;
         if (!empty($register)) {
             // Массив с ошибками формы
-            //$errors = validate_form_register($register);
+            $errors = validate_form_register($connect, $register);
 
             // Если ошибок нет, то выполняем запрос, и очищаем поля
             if (empty($errors)) {
@@ -33,7 +33,7 @@
                     $filename = uniqid() . (!empty($extension) ? '.' : '') . $extension;
                     move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $filename);
                 };
-                //$res = add_user($connect, $current_user_id, $register, $filename);
+                $res = add_user($connect, $register);
 
                 // Если ошибок не возникло, переходим на главную страницу
                 if ($res) {
