@@ -256,4 +256,9 @@
         };
         return $result;
     };
+
+    // Валидация формы авторизации
+    function validate_form_auth($link, $auth) {
+
+    };
 ?>
