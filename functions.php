@@ -77,7 +77,7 @@
 
     // Получаем из БД список проектов для текущего пользователя
     function get_projects_current_user($connect, $user_id) {
-        $sql = "SELECT DISTINCT projects.title AS title,  projects.id AS id FROM tasks JOIN projects ON tasks.user_id = projects.user_id AND tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY title ASC";
+        $sql = "SELECT DISTINCT projects.id AS id, projects.title AS title FROM projects JOIN tasks ON projects.id = tasks.project_id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY projects.title ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     };
@@ -115,24 +115,6 @@
         };
         return $result;
     };
-
-    // Валидации даты предложенная акаденией
-    /**
-     * Функция
-     * Проверяет, что переданная дата соответствует формату ДД.ММ.ГГГГ
-     * @param string $date строка с датой
-     * @return bool
-     */
-    /*
-     function check_date_format($date) {
-        $result = false;
-        $regexp = '/(\d{2})\.(\d{2})\.(\d{4})/m';
-        if (preg_match($regexp, $date, $parts) && count($parts) == 4) {
-            $result = checkdate($parts[2], $parts[1], $parts[3]);
-        }
-        return $result;
-    };
-    */
 
     // Проверка даты
     function validateDate($date, $format = 'd.m.Y') {
@@ -298,10 +280,4 @@
         return $result;
     };
 
-    // Авторизация на сайте
-    function authorization($link, $auth, $id) {
-
-
-        return false;
-    };
 ?>

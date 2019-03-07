@@ -2,6 +2,8 @@
 
     require_once('data.php');
 
+    require_once('init.php');
+
     require_once('functions.php');
 
     // Запрос имени пользователя
@@ -64,9 +66,9 @@
         'tasks' => $tasks,
         'title_page' => $title_page,
         'username' => $username,
-        'current_user_id' => $current_user_id
+        'current_user_id' => $current_user_id,
+        'guest' => true
         ]);
 
     print($layout_content);
-
 ?>

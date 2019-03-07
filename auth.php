@@ -2,6 +2,8 @@
 
     require_once('data.php');
 
+    require_once('init.php');
+
     require_once('functions.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -12,12 +14,12 @@
 
             // Если ошибок нет, то выполняем запрос, и очищаем поля
             if (empty($result['errors'])) {
-                $res = authorization($connect, $auth, $result['id']);
 
                 // Если ошибок не возникло, переходим на главную страницу
-                if ($res) {
+                if (isset($result['id'])) {
+                    $_SESSION['id'] = $result['id'];
                     unset($auth);
-                    header("Location: index.php");
+                    header("Location: /index.php");
                     exit;
                 } else {
                     $error_page[] = 'Ошибка выполнения запроса добавления задачи';
@@ -39,7 +41,8 @@
     $layout_content = include_template('layout.php',[
         'content' => $content,
         'connect' => $connect,
-        'title_page' => $title_page
+        'title_page' => $title_page,
+        'guest' => true
         ]);
 
     print($layout_content);

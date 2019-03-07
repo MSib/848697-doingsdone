@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="css/flatpickr.min.css">
 </head>
 
-<body>
+<body class="<?=($guest === 'index') ? ' body-background' : NULL?>">
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container container--with-sidebar">
+    <div class="container <?=($guest !== 'index') ? ' container--with-sidebar' : NULL?>">
         <header class="main-header">
             <a href="/">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
@@ -31,7 +31,7 @@
                     <div class="user-menu__data">
                         <p><?=$username; ?></p>
 
-                        <a href="#">Выйти</a>
+                        <a href="/logout.php">Выйти</a>
                     </div>
                 </div>
                 <?php else:?>
@@ -41,8 +41,11 @@
         </header>
 
         <div class="content">
-            <section class="content__side">
-                <?php if (isset($current_user_id) && !empty($username)):?>
+            <?php if ($guest !== 'index'):?>
+                <section class="content__side">
+            <?php endif; ?>
+                <?php if (isset($guest)):?>
+                <?php elseif (isset($current_user_id) && !empty($username)):?>
                 <h2 class="content__side-heading">Проекты</h2>
 
                 <nav class="main-navigation">
@@ -62,11 +65,16 @@
                     <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
                     <a class="button button--transparent content__side-button" href="auth.php">Войти</a>
                 <?php endif; ?>
-            </section>
-
+            <?php if ($guest !== 'index'):?>
+                </section>
+            <?php endif; ?>
+            <?php if ($guest === 'index'):?>
+                <?=$content;?>
+            <?php else:?>
             <main class="content__main">
                 <?=$content;?>
             </main>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -78,8 +86,9 @@
 
             <p>Веб-приложение для удобного ведения списка дел.</p>
         </div>
-
+        <?php if (!isset($guest)):?>
         <a class="main-footer__button button button--plus" href="add.php">Добавить задачу</a>
+        <?php endif; ?>
 
         <div class="main-footer__social social">
             <span class="visually-hidden">Мы в соцсетях:</span>
