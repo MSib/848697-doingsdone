@@ -210,6 +210,7 @@
     function validate_form_register($link, $register) {
         if (!empty($register['email'])) {
             if (filter_var($register['email'], FILTER_VALIDATE_EMAIL)) {
+                mysqli_set_charset($link, "utf8");
                 $sql = "SELECT Count(users.email) as count FROM users WHERE users.email = '" . mysqli_real_escape_string($link, $register['email']) . "';";
                 if(db_fetch_data($link, $sql)[0]['count']) {
                     $errors['email'] = 'Еmail занят';
@@ -259,6 +260,48 @@
 
     // Валидация формы авторизации
     function validate_form_auth($link, $auth) {
+        $errors = [];
 
+        if (empty($auth['password'])) {
+            $errors['password'] = 'Поле не заполненно';
+        };
+
+        if (!empty($auth['email'])) {
+            if (!filter_var($auth['email'], FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'Невалидный email';
+            };
+        } else {
+            $errors['email'] = 'Поле не заполненно';
+        };
+
+        if (empty($errors)) {
+            if ($link) {
+                mysqli_set_charset($link, "utf8");
+                $sql = "SELECT id, password FROM users WHERE email = '" . mysqli_real_escape_string($link, $auth['email']) . "';";
+                $res = db_fetch_data($link, $sql);
+                if (!empty($res[0])) {
+                    if (!password_verify($auth['password'], $res[0]['password'])) {
+                        $errors['invalid'] = true;
+                    };
+                };
+            } else {
+                $errors['invalid'] = true;
+            };
+        };
+
+        if (empty($errors)) {
+            $result['id'] = $res[0]['id'];
+        } else {
+            $result['errors'] = $errors;
+        };
+
+        return $result;
+    };
+
+    // Авторизация на сайте
+    function authorization($link, $auth, $id) {
+
+
+        return false;
     };
 ?>

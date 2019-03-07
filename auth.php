@@ -8,17 +8,11 @@
         $auth = $_POST;
         if (!empty($auth)) {
             // Массив с ошибками формы
-            $errors = validate_form_auth($auth, $auth);
+            $result = validate_form_auth($connect, $auth);
 
             // Если ошибок нет, то выполняем запрос, и очищаем поля
-            if (empty($errors)) {
-                $file = $_FILES['preview'];
-                if (!empty($file['name'])) {
-                    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-                    $filename = uniqid() . (!empty($extension) ? '.' : '') . $extension;
-                    move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $filename);
-                };
-                //$res = add_task($connect, $current_user_id, $auth, $filename);
+            if (empty($result['errors'])) {
+                $res = authorization($connect, $auth, $result['id']);
 
                 // Если ошибок не возникло, переходим на главную страницу
                 if ($res) {
@@ -38,7 +32,7 @@
     // Начало HTML кода
     $content = (empty($error_page)) ? include_template('auth.php',[
         'auth' => $auth,
-        'errors' => $errors
+        'errors' => $result['errors']
         ]) : include_template('error.php',[
         'error_page' => $error_page
         ]);
