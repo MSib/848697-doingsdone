@@ -77,7 +77,7 @@
 
     // Получаем из БД список проектов для текущего пользователя
     function get_projects_current_user($connect, $user_id) {
-        $sql = "SELECT DISTINCT projects.title AS title,  projects.id AS id FROM tasks JOIN projects ON tasks.user_id = projects.user_id AND tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY title ASC";
+        $sql = "SELECT DISTINCT projects.id AS id, projects.title AS title FROM projects JOIN tasks ON projects.id = tasks.project_id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY projects.title ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     };
@@ -115,24 +115,6 @@
         };
         return $result;
     };
-
-    // Валидации даты предложенная акаденией
-    /**
-     * Функция
-     * Проверяет, что переданная дата соответствует формату ДД.ММ.ГГГГ
-     * @param string $date строка с датой
-     * @return bool
-     */
-    /*
-     function check_date_format($date) {
-        $result = false;
-        $regexp = '/(\d{2})\.(\d{2})\.(\d{4})/m';
-        if (preg_match($regexp, $date, $parts) && count($parts) == 4) {
-            $result = checkdate($parts[2], $parts[1], $parts[3]);
-        }
-        return $result;
-    };
-    */
 
     // Проверка даты
     function validateDate($date, $format = 'd.m.Y') {
@@ -210,6 +192,7 @@
     function validate_form_register($link, $register) {
         if (!empty($register['email'])) {
             if (filter_var($register['email'], FILTER_VALIDATE_EMAIL)) {
+                mysqli_set_charset($link, "utf8");
                 $sql = "SELECT Count(users.email) as count FROM users WHERE users.email = '" . mysqli_real_escape_string($link, $register['email']) . "';";
                 if(db_fetch_data($link, $sql)[0]['count']) {
                     $errors['email'] = 'Еmail занят';
@@ -256,4 +239,45 @@
         };
         return $result;
     };
+
+    // Валидация формы авторизации
+    function validate_form_auth($link, $auth) {
+        $errors = [];
+
+        if (empty($auth['password'])) {
+            $errors['password'] = 'Поле не заполненно';
+        };
+
+        if (!empty($auth['email'])) {
+            if (!filter_var($auth['email'], FILTER_VALIDATE_EMAIL)) {
+                $errors['email'] = 'Невалидный email';
+            };
+        } else {
+            $errors['email'] = 'Поле не заполненно';
+        };
+
+        if (empty($errors)) {
+            if ($link) {
+                mysqli_set_charset($link, "utf8");
+                $sql = "SELECT id, password FROM users WHERE email = '" . mysqli_real_escape_string($link, $auth['email']) . "';";
+                $res = db_fetch_data($link, $sql);
+                if (!empty($res[0])) {
+                    if (!password_verify($auth['password'], $res[0]['password'])) {
+                        $errors['invalid'] = true;
+                    };
+                };
+            } else {
+                $errors['invalid'] = true;
+            };
+        };
+
+        if (empty($errors)) {
+            $result['id'] = $res[0]['id'];
+        } else {
+            $result['errors'] = $errors;
+        };
+
+        return $result;
+    };
+
 ?>

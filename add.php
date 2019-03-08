@@ -2,7 +2,14 @@
 
     require_once('data.php');
 
+    require_once('init.php');
+
     require_once('functions.php');
+
+    if (!isset($_SESSION['id'])) {
+        header("Location: /index.php");
+        exit;
+    }
 
     // Запрос имени пользователя
     $username = get_username_from_db($connect, $current_user_id);
@@ -59,6 +66,7 @@
         ]) : include_template('error.php',[
         'error_page' => $error_page
         ]);
+
     $layout_content = include_template('layout.php',[
         'content' => $content,
         'connect' => $connect,
