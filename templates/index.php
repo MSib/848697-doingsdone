@@ -27,7 +27,7 @@
         <tr class="tasks__item task <?=get_task_class_completed_and_important($tasks_value, $deadline);?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
+                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?=$tasks_value['id'];?>"<?=$tasks_value['completed'] === '1' ? 'checked' : NULL;?>>
                         <span class="checkbox__text"><?=htmlspecialchars($tasks_value['task']);?></span>
                     </label>
                 </td>

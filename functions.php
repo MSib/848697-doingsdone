@@ -84,7 +84,7 @@
 
     // Получаем из БД список задач для текущего пользователя
     function get_tasks_current_user($connect, $user_id) {
-        $sql = "SELECT tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed, tasks.file AS file FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY date_create ASC";
+        $sql = "SELECT tasks.id AS id, tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed, tasks.file AS file FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY date_create ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     };
@@ -304,6 +304,18 @@
                 ) VALUES('" .
                     mysqli_real_escape_string($link, $user_id) . "', '" .
                     mysqli_real_escape_string($link, $project['name']) . "');";
+            $result = mysqli_query($link, $sql);
+        } else {
+            $result = 'Ошибка БД: ' . mysqli_error($link);
+        };
+        return $result;
+    };
+
+    function checked_task($link, $task_id, $status) {
+        $result = [];
+        if ($link) {
+            mysqli_set_charset($link, "utf8");
+            $sql = "UPDATE tasks SET status = '" . mysqli_real_escape_string($link, $status) . "' WHERE id = '" . mysqli_real_escape_string($link, $task_id) . "';";
             $result = mysqli_query($link, $sql);
         } else {
             $result = 'Ошибка БД: ' . mysqli_error($link);

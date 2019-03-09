@@ -9,6 +9,11 @@
     require_once('functions.php');
 
     if (isset($_SESSION['id'])) {
+        // Выполняется после отметки пользователем задачи как выполненной.
+        if (isset($_GET['task_id']) && isset($_GET['check'])) {
+            checked_task($connect, $_GET['task_id'], $_GET['check']);
+        };
+
         // Запрос имени пользователя
         $username = get_username_from_db($connect, $current_user_id);
 
