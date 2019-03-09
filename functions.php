@@ -280,4 +280,34 @@
         return $result;
     };
 
+    function validate_form_project($project, $categories) {
+        $errors = [];
+
+        if (empty($project['name'])) {
+            $errors['name'] = 'Поле не заполненно';
+        } else {
+            if (in_array($project['name'], array_column($categories, 'title'))) {
+                $errors['name'] = 'Такой проект уже есть';
+            };
+        };
+
+        return $errors;
+    };
+
+    function add_project($link, $user_id, $project) {
+        $result = [];
+        if ($link) {
+            mysqli_set_charset($link, "utf8");
+            $sql = "INSERT INTO projects (
+                    user_id,
+                    title
+                ) VALUES('" .
+                    mysqli_real_escape_string($link, $user_id) . "', '" .
+                    mysqli_real_escape_string($link, $project['name']) . "');";
+            $result = mysqli_query($link, $sql);
+        } else {
+            $result = 'Ошибка БД: ' . mysqli_error($link);
+        };
+        return $result;
+    };
 ?>

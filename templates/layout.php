@@ -60,7 +60,7 @@
                 </nav>
 
                 <a class="button button--transparent button--plus content__side-button"
-                   href="pages/form-project.html" target="project_add">Добавить проект</a>
+                   href="/project.php" target="project_add">Добавить проект</a>
                 <?php else:?>
                     <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
                     <a class="button button--transparent content__side-button" href="auth.php">Войти</a>
