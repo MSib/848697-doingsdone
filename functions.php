@@ -83,22 +83,7 @@
     };
 
     // Получаем из БД список задач для текущего пользователя
-    function get_tasks_current_user($connect, $user_id, $filter='all') {
-        $midnight = date('Y-m-d H:i:s', strtotime('midnight'));
-        $now = date('Y-m-d H:i:s', strtotime('now'));
-        $tomorrow = date('Y-m-d H:i:s', strtotime('tomorrow midnight'));
-        $after_tomorrow = date('Y-m-d H:i:s', strtotime('2 day midnight'));
-        $after_three_days = date('Y-m-d H:i:s', strtotime('3 day midnight'));
-        if ($filter === 'today') {
-            $day_of_complete = "AND tasks.date_execution BETWEEN '" . $midnight . "' AND '" . $tomorrow . "'";
-        } elseif ($filter === 'tomorrow') {
-            $day_of_complete = "AND tasks.date_execution BETWEEN '" . $after_tomorrow . "' AND '" . $after_three_days . "'";
-        } elseif ($filter === 'overdue') {
-            $day_of_complete = "AND tasks.date_execution < '" . $now . "'";
-        } else {
-            $day_of_complete = NULL;
-        };
-
+    function get_tasks_current_user($connect, $user_id) {
         $sql =
             "SELECT
                 tasks.id AS id,
@@ -115,9 +100,7 @@
             ON
                 tasks.project_id = projects.id
             WHERE
-                tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "'" .
-            $day_of_complete .
-            " ORDER BY
+                tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY
                 date_create
             ASC";
         $result = db_fetch_data($connect, $sql);
@@ -356,5 +339,45 @@
             $result = 'Ошибка БД: ' . mysqli_error($link);
         };
         return $result;
+    };
+
+    // Проверяем, подходит ли задача под условие фильтра, в случае успеха вернёт true
+    function filtering_task($filter, $day_of_complete) {
+        // $midnight = date('Y-m-d H:i:s', strtotime('midnight'));
+        // $now = date('Y-m-d H:i:s', strtotime('now'));
+        // $tomorrow = date('Y-m-d H:i:s', strtotime('tomorrow midnight'));
+        // $after_tomorrow = date('Y-m-d H:i:s', strtotime('2 day midnight'));
+        // $after_three_days = date('Y-m-d H:i:s', strtotime('3 day midnight'));
+        if ($filter === 'all') {
+            return true;
+        } elseif (!empty($day_of_complete)) {
+            switch ($filter) {
+                case 'today':
+                        if ((
+                            strtotime('midnight') <= strtotime($day_of_complete)
+                            ) && (
+                            strtotime('tomorrow midnight') > strtotime($day_of_complete)
+                            )) {
+                            return true;
+                        };
+                        break;
+                    case 'tomorrow':
+                        if ((
+                            strtotime('tomorrow midnight') <= strtotime($day_of_complete)
+                            ) && (
+                            strtotime('2 day midnight') > strtotime($day_of_complete)
+                            )) {
+                            return true;
+                        };
+                        break;
+                    case 'overdue':
+                        if (strtotime('now') > strtotime($day_of_complete)) {
+                            return true;
+                        };
+                        break;
+                };
+        } else {
+            return false;
+        };
     };
 ?>

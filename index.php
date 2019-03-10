@@ -31,7 +31,7 @@
         $go_to_category = check_param_project($_GET['cat'], $category);
 
         // Запрос в БД, список задач для текущего пользователя
-        $tasks = get_tasks_current_user($connect, $current_user_id, $filter);
+        $tasks = get_tasks_current_user($connect, $current_user_id);
 
         // Если есть id категории, то применяем только задачи для этой категории
         // при неправильном значении - 404
