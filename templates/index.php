@@ -7,10 +7,10 @@
 
 <div class="tasks-controls">
     <nav class="tasks-switch">
-        <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-        <a href="/" class="tasks-switch__item">Повестка дня</a>
-        <a href="/" class="tasks-switch__item">Завтра</a>
-        <a href="/" class="tasks-switch__item">Просроченные</a>
+        <a href="/index.php?filter=all" class="tasks-switch__item<?=($filter === 'all') ? ' tasks-switch__item--active' : NULL?>">Все задачи</a>
+        <a href="/index.php?filter=today" class="tasks-switch__item<?=($filter === 'today') ? ' tasks-switch__item--active' : NULL?>">Повестка дня</a>
+        <a href="/index.php?filter=tomorrow" class="tasks-switch__item<?=($filter === 'tomorrow') ? ' tasks-switch__item--active' : NULL?>">Завтра</a>
+        <a href="/index.php?filter=overdue" class="tasks-switch__item<?=($filter === 'overdue') ? ' tasks-switch__item--active' : NULL?>">Просроченные</a>
     </nav>
 
     <label class="checkbox">
@@ -23,11 +23,16 @@
     <?php
         set_timezone($my_timezone);
         foreach($tasks_from_project as $tasks_key => $tasks_value): ?>
+        <?php
+            if (!filtering_task($filter, $tasks_value['day_of_complete'])) {
+                continue;
+            };
+        ?>
         <?php if ((($show_complete_tasks === 1) and ($show_complete_tasks === (int)$tasks_value['completed'])) or ((int)$tasks_value['completed'] === 0)): ?>
         <tr class="tasks__item task <?=get_task_class_completed_and_important($tasks_value, $deadline);?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
+                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?=$tasks_value['id'];?>"<?=$tasks_value['completed'] === '1' ? 'checked' : NULL;?>>
                         <span class="checkbox__text"><?=htmlspecialchars($tasks_value['task']);?></span>
                     </label>
                 </td>
