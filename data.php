@@ -3,7 +3,7 @@
     $connect = mysqli_connect('localhost','root', '','doingsdone');
 
     // показывать или нет выполненные задачи
-    $show_complete_tasks = rand(0, 1);
+    //$show_complete_tasks = rand(0, 1);
 
     // Название страницы
     $title_page = 'Дела в порядке';

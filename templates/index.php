@@ -7,10 +7,10 @@
 
 <div class="tasks-controls">
     <nav class="tasks-switch">
-        <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-        <a href="/" class="tasks-switch__item">Повестка дня</a>
-        <a href="/" class="tasks-switch__item">Завтра</a>
-        <a href="/" class="tasks-switch__item">Просроченные</a>
+        <a href="/index.php?filter=all" class="tasks-switch__item<?=($filter === 'all') ? ' tasks-switch__item--active' : NULL?>">Все задачи</a>
+        <a href="/index.php?filter=today" class="tasks-switch__item<?=($filter === 'today') ? ' tasks-switch__item--active' : NULL?>">Повестка дня</a>
+        <a href="/index.php?filter=tomorrow" class="tasks-switch__item<?=($filter === 'tomorrow') ? ' tasks-switch__item--active' : NULL?>">Завтра</a>
+        <a href="/index.php?filter=overdue" class="tasks-switch__item<?=($filter === 'overdue') ? ' tasks-switch__item--active' : NULL?>">Просроченные</a>
     </nav>
 
     <label class="checkbox">

@@ -14,6 +14,13 @@
             checked_task($connect, $_GET['task_id'], $_GET['check']);
         };
 
+        if (isset($_GET['show_completed'])) {
+            $show_complete_tasks = ($_GET['show_completed'] === '1') ? 1: 0;
+        };
+
+        // Определяем, выбран ли фильтр
+        $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
+
         // Запрос имени пользователя
         $username = get_username_from_db($connect, $current_user_id);
 
@@ -24,7 +31,7 @@
         $go_to_category = check_param_project($_GET['cat'], $category);
 
         // Запрос в БД, список задач для текущего пользователя
-        $tasks = get_tasks_current_user($connect, $current_user_id);
+        $tasks = get_tasks_current_user($connect, $current_user_id, $filter);
 
         // Если есть id категории, то применяем только задачи для этой категории
         // при неправильном значении - 404
@@ -34,6 +41,7 @@
 
         // Начало HTML кода
         $content = include_template('index.php',[
+            'filter' => $filter,
             'category' => $category,
             'tasks_from_project' => $tasks_from_project,
             'show_complete_tasks' => $show_complete_tasks,

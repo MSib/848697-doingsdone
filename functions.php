@@ -83,8 +83,43 @@
     };
 
     // Получаем из БД список задач для текущего пользователя
-    function get_tasks_current_user($connect, $user_id) {
-        $sql = "SELECT tasks.id AS id, tasks.title AS task, tasks.date_execution AS day_of_complete, projects.title AS category, projects.id AS category_id, tasks.status AS completed, tasks.file AS file FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY date_create ASC";
+    function get_tasks_current_user($connect, $user_id, $filter='all') {
+        $midnight = date('Y-m-d H:i:s', strtotime('midnight'));
+        $now = date('Y-m-d H:i:s', strtotime('now'));
+        $tomorrow = date('Y-m-d H:i:s', strtotime('tomorrow midnight'));
+        $after_tomorrow = date('Y-m-d H:i:s', strtotime('2 day midnight'));
+        $after_three_days = date('Y-m-d H:i:s', strtotime('3 day midnight'));
+        if ($filter === 'today') {
+            $day_of_complete = "AND tasks.date_execution BETWEEN '" . $midnight . "' AND '" . $tomorrow . "'";
+        } elseif ($filter === 'tomorrow') {
+            $day_of_complete = "AND tasks.date_execution BETWEEN '" . $after_tomorrow . "' AND '" . $after_three_days . "'";
+        } elseif ($filter === 'overdue') {
+            $day_of_complete = "AND tasks.date_execution < '" . $now . "'";
+        } else {
+            $day_of_complete = NULL;
+        };
+
+        $sql =
+            "SELECT
+                tasks.id AS id,
+                tasks.title AS task,
+                tasks.date_execution AS day_of_complete,
+                projects.title AS category,
+                projects.id AS category_id,
+                tasks.status AS completed,
+                tasks.file AS file
+            FROM
+                tasks
+            JOIN
+                projects
+            ON
+                tasks.project_id = projects.id
+            WHERE
+                tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "'" .
+            $day_of_complete .
+            " ORDER BY
+                date_create
+            ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     };
