@@ -1,7 +1,7 @@
 <h2 class="content__main-heading">Список задач</h2>
 
-<form class="search-form" action="index.php" method="post">
-    <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
+<form class="search-form" action="/index.php" method="get" autocomplete="off">
+    <input class="search-form__input" type="text" name="search" value="" placeholder="Поиск по задачам">
     <input class="search-form__submit" type="submit" name="" value="Искать">
 </form>
 
@@ -20,30 +20,34 @@
 </div>
 
 <table class="tasks">
+<?php if (!empty($search_result) || empty(trim($search))): ?>
     <?php
         set_timezone($my_timezone);
         foreach($tasks_from_project as $tasks_key => $tasks_value): ?>
-        <?php
-            if (!filtering_task($filter, $tasks_value['day_of_complete'])) {
-                continue;
-            };
-        ?>
-        <?php if ((($show_complete_tasks === 1) and ($show_complete_tasks === (int)$tasks_value['completed'])) or ((int)$tasks_value['completed'] === 0)): ?>
-        <tr class="tasks__item task <?=get_task_class_completed_and_important($tasks_value, $deadline);?>">
-                <td class="task__select">
-                    <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?=$tasks_value['id'];?>"<?=$tasks_value['completed'] === '1' ? 'checked' : NULL;?>>
-                        <span class="checkbox__text"><?=htmlspecialchars($tasks_value['task']);?></span>
-                    </label>
-                </td>
-                <td class="task__file">
-                    <?php if (htmlspecialchars($tasks_value['file'])):?>
-                        <a class="download-link" href="/<?=htmlspecialchars($tasks_value['file'])?>"><?=htmlspecialchars($tasks_value['file'])?></a>
-                    <?php endif; ?>
-                </td>
-                <td class="task__date"><?php if ($tasks_value['day_of_complete'] !== NULL) { echo date('d.m.Y', strtotime(strip_tags($tasks_value['day_of_complete']))); } else { echo 'Нет'; } ?>
-                </td>
-            </tr>
-        <?php endif; ?>
-    <?php endforeach; ?>
+            <?php
+                if (!filtering_task($filter, $tasks_value['day_of_complete'])) {
+                    continue;
+                };
+            ?>
+            <?php if ((($show_complete_tasks === 1) and ($show_complete_tasks === (int)$tasks_value['completed'])) or (((int)$tasks_value['completed'] === 0)) or (!empty($search_result))): ?>
+            <tr class="tasks__item task <?=get_task_class_completed_and_important($tasks_value, $deadline);?>">
+                    <td class="task__select">
+                        <label class="checkbox task__checkbox">
+                            <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="<?=$tasks_value['id'];?>"<?=$tasks_value['completed'] === '1' ? 'checked' : NULL;?>>
+                            <span class="checkbox__text"><?=htmlspecialchars($tasks_value['task']);?></span>
+                        </label>
+                    </td>
+                    <td class="task__file">
+                        <?php if (htmlspecialchars($tasks_value['file'])):?>
+                            <a class="download-link" href="/<?=htmlspecialchars($tasks_value['file'])?>"><?=htmlspecialchars($tasks_value['file'])?></a>
+                        <?php endif; ?>
+                    </td>
+                    <td class="task__date"><?php if ($tasks_value['day_of_complete'] !== NULL) { echo date('d.m.Y', strtotime(strip_tags($tasks_value['day_of_complete']))); } else { echo 'Нет'; } ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Ничего не найдено по вашему запросу</p>
+    <?php endif; ?>
 </table>

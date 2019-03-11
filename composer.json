@@ -1,0 +1,12 @@
+{
+    "name": "msib/doingsdone",
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    },
+    "authors": [
+        {
+            "name": "MSib",
+            "email": "mishams88@mail.ru"
+        }
+    ]
+}

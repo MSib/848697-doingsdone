@@ -380,4 +380,34 @@
             return false;
         };
     };
+
+    // Вернёт результат поиска
+    function search_query($connect, $user_id, $search) {
+        if (!empty(trim($search))) {
+            $sql =
+                "SELECT
+                    tasks.id AS id,
+                    tasks.title AS task,
+                    tasks.date_execution AS day_of_complete,
+                    projects.title AS category,
+                    projects.id AS category_id,
+                    tasks.status AS completed,
+                    tasks.file AS file
+                FROM
+                    tasks
+                JOIN
+                    projects
+                ON
+                    tasks.project_id = projects.id
+                WHERE
+                    tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "'
+                AND
+                    MATCH(tasks.title) AGAINST('" . mysqli_real_escape_string($connect, $search) . "')
+                ORDER BY
+                    date_create
+                ASC";
+            return db_fetch_data($connect, $sql);
+        };
+    return false;
+    };
 ?>
