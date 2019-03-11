@@ -414,7 +414,9 @@
     function get_id_users_overdue_tasks ($link) {
         $sql =
         "SELECT DISTINCT
-            users.id AS id
+            users.id AS id,
+            users.email AS email,
+            users.username AS username
         FROM
             users
         JOIN
@@ -434,7 +436,6 @@
         $sql =
             "SELECT
                 users.id AS id,
-                users.email AS email,
                 users.username AS username,
                 tasks.title AS title,
                 tasks.date_execution AS date_execution
