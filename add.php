@@ -39,7 +39,7 @@
                     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
                     $filename = uniqid() . (!empty($extension) ? '.' : '') . $extension;
                     move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $filename);
-                };
+                }
                 $res = add_task($connect, $current_user_id, $task, $filename);
 
                 // Если ошибок не возникло, переходим на главную страницу
@@ -49,11 +49,11 @@
                     exit;
                 } else {
                     $error_page[] = 'Ошибка выполнения запроса добавления задачи';
-                };
+                }
             } elseif(empty($username)) {
                 $error_page[] = 'Ошибка добавления задачи. Пользователь не найден.';
-            };
-        };
+            }
+        }
     }
 
 

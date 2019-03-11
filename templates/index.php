@@ -27,7 +27,7 @@
             <?php
                 if (!filtering_task($filter, $tasks_value['day_of_complete'])) {
                     continue;
-                };
+                }
             ?>
             <?php if ((($show_complete_tasks === 1) and ($show_complete_tasks === (int)$tasks_value['completed'])) or (((int)$tasks_value['completed'] === 0)) or (!empty($search_result))): ?>
             <tr class="tasks__item task <?=get_task_class_completed_and_important($tasks_value, $deadline);?>">

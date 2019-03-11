@@ -34,7 +34,7 @@
                     $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
                     $filename = uniqid() . (!empty($extension) ? '.' : '') . $extension;
                     move_uploaded_file($file['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/' . $filename);
-                };
+                }
                 $res = add_user($connect, $register);
 
                 // Если ошибок не возникло, переходим на главную страницу
@@ -44,9 +44,9 @@
                     exit;
                 } else {
                     $error_page[] = 'Ошибка добавления задачи';
-                };
-            };
-        };
+                }
+            }
+        }
     }
 
 
