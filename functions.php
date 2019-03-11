@@ -1,4 +1,11 @@
 <?php
+    /**
+     * Формирует HTML на основе шаблона
+     * @param string $name Имя файла шаблона в корневой папке template
+     * @param array $data Ассоциативный массив переменных для подключения их в шаблон
+     *
+     * @return string Готовый HTML
+     */
     function include_template($name, $data) {
         $name = 'templates/' . $name;
         $result = '';
@@ -16,7 +23,13 @@
         return $result;
     }
 
-    // Функция возвращает число задач для переданного проекта
+    /**
+     * Функция возвращает число задач для переданного проекта
+     * @param array $arr Массив задач
+     * @param string $val Название проекта
+     *
+     * @return int Количество задач
+     */
     function count_matches_in_array ($arr, $val) {
         $result = 0;
         foreach ($arr as $key => $value) {
@@ -27,7 +40,12 @@
         return $result;
     }
 
-    // Проверка и установка временной зоны
+    /**
+     * Проверка и установка временной зоны
+     * @param string $timezone
+     *
+     * @return string Назвение часовой зоны
+     */
     function set_timezone ($timezone) {
         if (date_default_timezone_get() !== $timezone) {
             date_default_timezone_set($timezone);
@@ -35,7 +53,15 @@
         return date_default_timezone_get();
     }
 
-    // Определяем дополнительные классы для задач (выполненные, и с исходящим сроком выполнения)
+    /**
+     * Определяем дополнительные классы для задач
+     * (выполненные, и с исходящим сроком выполнения)
+     *
+     * @param array $tasks_value Задача в которой проверяем оставшееся время
+     * @param int $deadline Время до дедлайна
+     *
+     * @return string Класс указывающий на то, что подходит дедлайн
+     */
     function get_task_class_completed_and_important ($tasks_value, $deadline) {
         $result;
             if ((int)$tasks_value['completed'] === 1) {
@@ -47,7 +73,14 @@
         return $result;
     }
 
-    // Выполнение запросов выборки
+    /**
+     * Выполнение запросов выборки
+     *
+     * @param string $connect Строка подключения
+     * @param string $sql Строка с запросом
+     *
+     * @return array Ассоциативный массив
+     */
     function db_fetch_data($connect, $sql) {
         $result = [];
         if ($connect) {
@@ -61,28 +94,55 @@
 
     }
 
-    // Получаем имя пользователя из БД
+    /**
+     * Получаем имя пользователя из БД
+     *
+     * @param string $connect Строка подключения
+     * @param string $user_id ID пользователя
+     *
+     * @return string Имя текущего пользователя
+     */
     function get_username_from_db($connect, $user_id) {
         $sql = "SELECT username FROM users WHERE id =  '" . mysqli_real_escape_string($connect, $user_id) . "';";
         $result = db_fetch_data($connect, $sql)[0]['username'];
         return $result;
     }
 
-    // Получаем из БД список всех проектов
+    /**
+     * Получаем из БД список всех проектов
+     *
+     * @param string $connect
+     *
+     * @return array Все проекты
+     */
     function get_projects($connect) {
         $sql = "SELECT projects.title, projects.id FROM projects JOIN users ON users.id = projects.user_id ORDER BY projects.id DESC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
 
-    // Получаем из БД список проектов для текущего пользователя
+    /**
+     * Получаем из БД список проектов для текущего пользователя
+     *
+     * @param string $connect Строка запроса
+     * @param string $user_id ID пользователя
+     *
+     * @return array Список проектов для текущего пользователя
+     */
     function get_projects_current_user($connect, $user_id) {
         $sql = "SELECT DISTINCT projects.id AS id, projects.title AS title FROM projects JOIN tasks ON projects.id = tasks.project_id WHERE tasks.user_id = '" . mysqli_real_escape_string($connect, $user_id) . "' ORDER BY projects.title ASC";
         $result = db_fetch_data($connect, $sql);
         return $result;
     }
 
-    // Получаем из БД список задач для текущего пользователя
+    /**
+     * Получаем из БД список задач для текущего пользователя
+     *
+     * @param string $connect Строка запроса
+     * @param string $user_id ID пользователя
+     *
+     * @return array Список задач для текущего пользователя
+     */
     function get_tasks_current_user($connect, $user_id) {
         $sql =
             "SELECT
@@ -107,7 +167,14 @@
         return $result;
     }
 
-    // Проверка на существование параметра с идентификатором проекта
+    /**
+     * Проверка на существование параметра с идентификатором проекта
+     *
+     * @param string $cat Номер категории из GET
+     * @param array $category Категории пользователя
+     *
+     * @return int Номер категории
+     */
     function check_param_project($cat, $category) {
         if (isset($cat)) {
             if (in_array((int)$cat, array_column($category, 'id'))) {
@@ -119,7 +186,15 @@
         }
     }
 
-    // Отсеять задачи, оставить только для выбранного проекта, если проект не выбран, то вернёт все задачи
+    /**
+     * Отсеять задачи, оставить только для выбранного проекта,
+     * если проект не выбран, то вернёт все задачи
+     *
+     * @param array $tasks Массив всех задач
+     * @param int $cat_id ID выбранного проекта
+     *
+     * @return array Задачи для выбранного проекта
+     */
     function select_task_from_project($tasks, $cat_id) {
         $result = [];
         if (isset($cat_id)){
@@ -134,13 +209,27 @@
         return $result;
     }
 
-    // Проверка даты
+    /**
+     * Проверка даты
+     *
+     * @param string $date Дата которую нужно проверить
+     * @param string $format Формат даты, значение по умолчанию: 'd.m.Y'
+     *
+     * @return boolean True в случае валидности даты, иначе false
+     */
     function validateDate($date, $format = 'd.m.Y') {
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     }
 
-    // Проверка валидации формы добавления задачи
+    /**
+     * Проверка валидации формы добавления задачи
+     *
+     * @param array $task Поля формы добавления новой задачи
+     * @param array $categories Массив категорий категории
+     *
+     * @return array Массив ошибок
+     */
     function validate_form_add($task, $categories) {
         $errors = [];
         if (empty($task['name'])) {
@@ -176,7 +265,16 @@
         return $errors;
     }
 
-    // Добавление новой задачи в БД
+    /**
+     * Добавление новой задачи в БД
+     *
+     * @param string $link Строка подключения
+     * @param string $id ID пользователя
+     * @param array $task Данные из формы
+     * @param string $file Информация о файле из формы
+     *
+     * @return string Результат выполнения запроса
+     */
     function add_task($link, $id, $task, $file) {
         $result = [];
         if ($link) {
@@ -206,7 +304,14 @@
         return $result;
     }
 
-    // Валидация формы регистрации
+    /**
+     * Валидация формы регистрации
+     *
+     * @param string $link Строка подключения
+     * @param array $register Данные из формы
+     *
+     * @return array Массив ошибок
+     */
     function validate_form_register($link, $register) {
         if (!empty($register['email'])) {
             if (filter_var($register['email'], FILTER_VALIDATE_EMAIL)) {
@@ -233,7 +338,14 @@
         return $errors;
     }
 
-    // Добавление нового пользователя в БД
+    /**
+     * Добавление нового пользователя в БД
+     *
+     * @param string $link Строка запроса
+     * @param array $register Данные из формы
+     *
+     * @return string Результат выполенения
+     */
     function add_user($link, $register) {
         $result = [];
         if ($link) {
@@ -258,7 +370,14 @@
         return $result;
     }
 
-    // Валидация формы авторизации
+    /**
+     * Валидация формы авторизации
+     *
+     * @param string $link Строка запроса
+     * @param array $auth Данные из формы
+     *
+     * @return array Массив ошибок
+     */
     function validate_form_auth($link, $auth) {
         $errors = [];
 
@@ -298,6 +417,14 @@
         return $result;
     }
 
+    /**
+     * Проверка валидности данных из формы добавления проекта
+     *
+     * @param array $project Данные из формы
+     * @param array $categories Массив всех категорий
+     *
+     * @return array Массив ошибок
+     */
     function validate_form_project($project, $categories) {
         $errors = [];
 
@@ -312,6 +439,15 @@
         return $errors;
     }
 
+    /**
+     * Добавление проекта
+     *
+     * @param string $link Строка подключения
+     * @param string $user_id ID пользователя
+     * @param array $project Данные из формы
+     *
+     * @return string Результат запроса
+     */
     function add_project($link, $user_id, $project) {
         $result = [];
         if ($link) {
@@ -329,6 +465,15 @@
         return $result;
     }
 
+    /**
+     * Переключаем задачу, выполненная / не выполненная
+     *
+     * @param string $link Строка подключения
+     * @param string $task_id ID задачи
+     * @param string $status Статус задачи, где 0 - невыполненная, 1 - выполненная
+     *
+     * @return string Результат запроса
+     */
     function checked_task($link, $task_id, $status) {
         $result = [];
         if ($link) {
@@ -341,13 +486,17 @@
         return $result;
     }
 
-    // Проверяем, подходит ли задача под условие фильтра, в случае успеха вернёт true
+    /**
+     * Проверяем, подходит ли задача под условие фильтра,
+     * в случае успеха вернёт true
+     *
+     * @param string $filter Значение фильтра, приходит по GET
+     * @param string $day_of_complete Дата, до которой нужно выполнить задачу
+     *
+     * @return boolean Если ли задача подходит под условие фильтра вернёт true
+     */
+    //
     function filtering_task($filter, $day_of_complete) {
-        // $midnight = date('Y-m-d H:i:s', strtotime('midnight'));
-        // $now = date('Y-m-d H:i:s', strtotime('now'));
-        // $tomorrow = date('Y-m-d H:i:s', strtotime('tomorrow midnight'));
-        // $after_tomorrow = date('Y-m-d H:i:s', strtotime('2 day midnight'));
-        // $after_three_days = date('Y-m-d H:i:s', strtotime('3 day midnight'));
         if ($filter === 'all') {
             return true;
         } elseif (!empty($day_of_complete)) {
@@ -381,7 +530,15 @@
         }
     }
 
-    // Вернёт результат поиска
+    /**
+     * Поисковой запрос
+     *
+     * @param string $connect Строка подключения
+     * @param string $user_id ID пользователя
+     * @param string $search Строка запроса
+     *
+     * @return array Результат поиска
+     */
     function search_query($connect, $user_id, $search) {
         if (!empty(trim($search))) {
             $sql =
@@ -411,6 +568,14 @@
     return false;
     }
 
+    /**
+     * Получение пользователей,
+     * у которых есть просроченные задания
+     *
+     * @param string $link Строка запроса
+     *
+     * @return array Массив пользователей, у которых есть просроченные задания
+     */
     function get_id_users_overdue_tasks ($link) {
         $sql =
         "SELECT DISTINCT
@@ -431,7 +596,13 @@
         return $result;
     }
 
-    // Возвращает все просроченные задания
+    /**
+     * Возвращает просроченные задания всех пользователей
+     *
+     * @param string $link Строка запроса
+     *
+     * @return array Массив всех просроченных заданий
+     */
     function get_overdue_tasks($link) {
         $sql =
             "SELECT
