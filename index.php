@@ -18,6 +18,11 @@
             $show_complete_tasks = ($_GET['show_completed'] === '1') ? 1: 0;
         };
 
+        if (isset($_GET['search'])) {
+            $search = $_GET['search'];
+            $search_result = search_query($connect, $current_user_id, $search);
+        };
+
         // Определяем, выбран ли фильтр
         $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
 
@@ -36,12 +41,14 @@
         // Если есть id категории, то применяем только задачи для этой категории
         // при неправильном значении - 404
         // при отсутсвии значения - весь список задач для текущего пользователя
-        $tasks_from_project = select_task_from_project($tasks, $go_to_category);
+        $tasks_from_project = (empty(trim($search))) ? select_task_from_project($tasks, $go_to_category) : $search_result;
 
 
         // Начало HTML кода
         $content = include_template('index.php',[
             'filter' => $filter,
+            'search' => $search,
+            'search_result' => $search_result,
             'category' => $category,
             'tasks_from_project' => $tasks_from_project,
             'show_complete_tasks' => $show_complete_tasks,
