@@ -159,7 +159,7 @@
             if (!validateDate($task['date'])) {
                 $errors['date'] = 'Неверная дата';
             };
-            if (strtotime($task['date']) < strtotime(midnight)) {
+            if (strtotime($task['date']) < strtotime('midnight')) {
                 $errors['date'] = 'Дата выполнения должна быть в будущем';
             };
         };
@@ -409,5 +409,46 @@
             return db_fetch_data($connect, $sql);
         };
     return false;
+    };
+
+    function get_id_users_overdue_tasks ($link) {
+        $sql =
+        "SELECT DISTINCT
+            users.id AS id
+        FROM
+            users
+        JOIN
+            tasks
+        ON
+            tasks.user_id = users.id
+        WHERE
+            tasks.date_execution < CURRENT_TIMESTAMP
+        AND
+            tasks.status = 0";
+        $result = db_fetch_data($link, $sql);
+        return $result;
+    };
+
+    // Возвращает все просроченные задания
+    function get_overdue_tasks($link) {
+        $sql =
+            "SELECT
+                users.id AS id,
+                users.email AS email,
+                users.username AS username,
+                tasks.title AS title,
+                tasks.date_execution AS date_execution
+            FROM
+                users
+            JOIN
+                tasks
+            ON
+                tasks.user_id = users.id
+            WHERE
+                tasks.date_execution < CURRENT_TIMESTAMP
+            AND
+                tasks.status = 0";
+        $result = db_fetch_data($link, $sql);
+        return $result;
     };
 ?>
