@@ -19,7 +19,7 @@
     <?php
         if(!empty($errors)) {
              (empty($errors['invalid'])) ? print('<p class="error-message">Пожалуйста, исправьте ошибки в форме</p>') : print('<p class="error-message">Вы ввели неверный email/пароль</p>') ;
-        };
+        }
     ?>
     <input class="button" type="submit" name="" value="Войти">
     </div>

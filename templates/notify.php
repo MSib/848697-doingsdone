@@ -11,8 +11,8 @@
     foreach ($tasks as $tasks_value) {
         if($user_id['id'] === $tasks_value['id']) {
             print('Уважаемый, ' . $tasks_value['username'] . '. У вас запланирована задача ' . $tasks_value['title'] . ' на ' . date('d.m.Y', strtotime($tasks_value['date_execution'])) . '<br>');
-        };
-    };
+        }
+    }
 ?>
 </body>
 </html>

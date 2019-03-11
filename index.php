@@ -12,16 +12,16 @@
         // Выполняется после отметки пользователем задачи как выполненной.
         if (isset($_GET['task_id']) && isset($_GET['check'])) {
             checked_task($connect, $_GET['task_id'], $_GET['check']);
-        };
+        }
 
         if (isset($_GET['show_completed'])) {
             $show_complete_tasks = ($_GET['show_completed'] === '1') ? 1: 0;
-        };
+        }
 
         if (isset($_GET['search'])) {
             $search = $_GET['search'];
             $search_result = search_query($connect, $current_user_id, $search);
-        };
+        }
 
         // Определяем, выбран ли фильтр
         $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
@@ -59,7 +59,7 @@
             ]);
     } else {
         $content = include_template('guest.php',[]);
-    };
+    }
 
     $layout_content = (isset($_SESSION['id'])) ? (include_template('layout.php',[
         'content' => $content,
